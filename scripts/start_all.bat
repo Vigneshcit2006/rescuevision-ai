@@ -6,10 +6,10 @@ REM windows. Close either window to stop that process.
 cd /d "%~dp0"
 
 echo Starting backend in a new window...
-start "RescueVision AI - Backend" cmd /k "%~dp0run_backend.bat"
+start "RescueVision AI - Backend" cmd /k "%~dp0run_backend.bat" --nostart-frontend
 
 echo Starting frontend in a new window...
-start "RescueVision AI - Frontend" cmd /k "%~dp0run_frontend.bat"
+start "RescueVision AI - Frontend" cmd /k "%~dp0run_frontend.bat" --nostart-backend
 
 echo.
 echo Both windows have been launched.

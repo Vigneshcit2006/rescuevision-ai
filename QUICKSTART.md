@@ -17,10 +17,13 @@ If you're on Windows and don't want to use a terminal, `scripts/` has
 double-clickable `.bat` files that install dependencies and start each
 process in its own cmd window (logs/errors stay visible in that window):
 
-- **`scripts/start_all.bat`** — starts both backend and frontend at once,
-  each in its own window.
-- `scripts/run_backend.bat` — backend only (`http://localhost:8000`).
-- `scripts/run_frontend.bat` — frontend only (`http://localhost:5173`).
+- **`scripts/run_backend.bat`** or **`scripts/run_frontend.bat`** — either
+  one starts BOTH processes: whichever you double-click runs in that same
+  window, and the other one launches automatically in a new window. So
+  double-clicking either file is enough to get everything running
+  (`http://localhost:8000` backend, `http://localhost:5173` frontend).
+- `scripts/start_all.bat` — equivalent, but puts backend AND frontend each
+  in their own new window (nothing runs in the window you double-clicked).
 - `scripts/run_tests.bat` — runs the backend pytest suite.
 
 Close a window (or Ctrl+C inside it) to stop that process. These just wrap
