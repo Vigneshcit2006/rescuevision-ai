@@ -1,0 +1,51 @@
+{
+  "family": "rescuevision-backend",
+  "networkMode": "awsvpc",
+  "requiresCompatibilities": ["FARGATE"],
+  "cpu": "512",
+  "memory": "1024",
+  "executionRoleArn": "arn:aws:iam::<ACCOUNT_ID>:role/rescuevision-ecs-execution-role",
+  "taskRoleArn": "arn:aws:iam::<ACCOUNT_ID>:role/rescuevision-task-role",
+  "containerDefinitions": [
+    {
+      "name": "rescuevision-backend",
+      "image": "<ACCOUNT_ID>.dkr.ecr.<AWS_REGION>.amazonaws.com/rescuevision-backend:latest",
+      "essential": true,
+      "portMappings": [
+        {
+          "containerPort": 8000,
+          "protocol": "tcp"
+        }
+      ],
+      "environment": [
+        { "name": "ENVIRONMENT", "value": "production" },
+        { "name": "STORAGE_BACKEND", "value": "aws" },
+        { "name": "INCIDENT_BACKEND", "value": "aws" },
+        { "name": "NOTIFICATION_BACKEND", "value": "aws" },
+        { "name": "AWS_REGION", "value": "<AWS_REGION>" },
+        { "name": "S3_BUCKET", "value": "rescuevision-evidence-<ACCOUNT_ID>" },
+        { "name": "DYNAMODB_TABLE", "value": "rescuevision-incidents" },
+        { "name": "SNS_TOPIC_ARN", "value": "arn:aws:sns:<AWS_REGION>:<ACCOUNT_ID>:rescuevision-alerts" },
+        { "name": "LOG_LEVEL", "value": "INFO" }
+      ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/rescuevision/backend",
+          "awslogs-region": "<AWS_REGION>",
+          "awslogs-stream-prefix": "backend"
+        }
+      },
+      "healthCheck": {
+        "command": [
+          "CMD-SHELL",
+          "python -c \"import urllib.request; urllib.request.urlopen('http://localhost:8000/api/health').read()\" || exit 1"
+        ],
+        "interval": 30,
+        "timeout": 5,
+        "retries": 3,
+        "startPeriod": 10
+      }
+    }
+  ]
+}

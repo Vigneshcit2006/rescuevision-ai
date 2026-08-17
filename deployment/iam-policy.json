@@ -1,0 +1,51 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "RescueVisionS3EvidenceBucket",
+      "Effect": "Allow",
+      "Action": [
+        "s3:PutObject",
+        "s3:GetObject",
+        "s3:ListBucket"
+      ],
+      "Resource": [
+        "arn:aws:s3:::rescuevision-evidence-<ACCOUNT_ID>",
+        "arn:aws:s3:::rescuevision-evidence-<ACCOUNT_ID>/*"
+      ]
+    },
+    {
+      "Sid": "RescueVisionDynamoDBIncidentsTable",
+      "Effect": "Allow",
+      "Action": [
+        "dynamodb:PutItem",
+        "dynamodb:GetItem",
+        "dynamodb:UpdateItem",
+        "dynamodb:Query",
+        "dynamodb:Scan"
+      ],
+      "Resource": [
+        "arn:aws:dynamodb:<AWS_REGION>:<ACCOUNT_ID>:table/rescuevision-incidents",
+        "arn:aws:dynamodb:<AWS_REGION>:<ACCOUNT_ID>:table/rescuevision-incidents/index/*"
+      ]
+    },
+    {
+      "Sid": "RescueVisionSNSAlertsTopic",
+      "Effect": "Allow",
+      "Action": [
+        "sns:Publish"
+      ],
+      "Resource": "arn:aws:sns:<AWS_REGION>:<ACCOUNT_ID>:rescuevision-alerts"
+    },
+    {
+      "Sid": "RescueVisionCloudWatchLogs",
+      "Effect": "Allow",
+      "Action": [
+        "logs:CreateLogGroup",
+        "logs:CreateLogStream",
+        "logs:PutLogEvents"
+      ],
+      "Resource": "arn:aws:logs:<AWS_REGION>:<ACCOUNT_ID>:log-group:/rescuevision/*"
+    }
+  ]
+}

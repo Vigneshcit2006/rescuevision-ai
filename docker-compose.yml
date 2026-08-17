@@ -1,0 +1,63 @@
+# RescueVision AI - local development / demo stack.
+#
+# Usage:
+#   docker compose up --build
+#
+# Backend  -> http://localhost:8000  (docs at /docs, health at /api/health)
+# Frontend -> http://localhost:5173
+#
+# This file targets 100% local-mode operation (STORAGE_BACKEND=local,
+# INCIDENT_BACKEND=local, NOTIFICATION_BACKEND=local) so it runs with zero
+# AWS credentials. To point at real AWS resources, override the aws_*
+# variables below (e.g. via a root .env file) and flip the *_BACKEND vars
+# to "aws".
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    image: rescuevision-backend:local
+    container_name: rescuevision-backend
+    ports:
+      - "8000:8000"
+    environment:
+      ENVIRONMENT: ${ENVIRONMENT:-local}
+      STORAGE_BACKEND: ${STORAGE_BACKEND:-local}
+      INCIDENT_BACKEND: ${INCIDENT_BACKEND:-local}
+      NOTIFICATION_BACKEND: ${NOTIFICATION_BACKEND:-local}
+      AWS_REGION: ${AWS_REGION:-us-east-1}
+      S3_BUCKET: ${S3_BUCKET:-}
+      DYNAMODB_TABLE: ${DYNAMODB_TABLE:-rescuevision-incidents}
+      SNS_TOPIC_ARN: ${SNS_TOPIC_ARN:-}
+      LOCAL_STORAGE_DIR: ${LOCAL_STORAGE_DIR:-./data/evidence}
+      LOCAL_DB_PATH: ${LOCAL_DB_PATH:-./data/incidents.db}
+      DEFAULT_SCENARIO: ${DEFAULT_SCENARIO:-fire_smoke}
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
+      # Only needed if *_BACKEND is switched to "aws"; local mode ignores these.
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID:-}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY:-}
+    volumes:
+      - ./backend/data:/app/data
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/api/health').read()"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        VITE_API_BASE_URL: ${VITE_API_BASE_URL:-http://localhost:8000}
+    image: rescuevision-frontend:local
+    container_name: rescuevision-frontend
+    depends_on:
+      backend:
+        condition: service_healthy
+    ports:
+      - "5173:80"
+    restart: unless-stopped

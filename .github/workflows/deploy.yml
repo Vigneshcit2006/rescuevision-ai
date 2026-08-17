@@ -1,0 +1,72 @@
+name: Deploy (manual / documentation only)
+
+# NOT VERIFIED: this workflow has never been run against a real AWS account.
+# It documents the intended deploy path described in
+# deployment/DEPLOYMENT_STEPS.md and is gated so it cannot run accidentally:
+#   1. It only triggers on a manual workflow_dispatch or a "v*" tag push.
+#   2. Every job step that touches AWS is additionally gated on the
+#      relevant secret being present, so a fork/PR without secrets
+#      configured will simply skip those steps rather than fail.
+#
+# To actually use this, a repository maintainer must first add these
+# repository secrets: AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_REGION,
+# ECR_REPOSITORY (or EC2_HOST/EC2_SSH_KEY if deploying to EC2 instead of ECS).
+
+on:
+  workflow_dispatch: {}
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  deploy-backend:
+    name: Build + deploy backend image (ECS Fargate path)
+    runs-on: ubuntu-latest
+    # Skip the whole job if AWS credentials haven't been configured as
+    # repository secrets - this keeps the workflow file "correct but inert"
+    # in forks / repos that haven't set up real infrastructure yet.
+    if: ${{ github.repository_owner != '' && secrets.AWS_ACCESS_KEY_ID != '' }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        if: ${{ secrets.AWS_ACCESS_KEY_ID != '' }}
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        if: ${{ secrets.AWS_ACCESS_KEY_ID != '' }}
+        id: ecr-login
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Build and push backend image
+        if: ${{ secrets.AWS_ACCESS_KEY_ID != '' }}
+        env:
+          ECR_REGISTRY: ${{ steps.ecr-login.outputs.registry }}
+          ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY }}
+          IMAGE_TAG: ${{ github.sha }}
+        run: |
+          docker build -t "$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" \
+                        -t "$ECR_REGISTRY/$ECR_REPOSITORY:latest" \
+                        ./backend
+          docker push "$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
+          docker push "$ECR_REGISTRY/$ECR_REPOSITORY:latest"
+
+      - name: Deploy new task definition revision to ECS
+        if: ${{ secrets.AWS_ACCESS_KEY_ID != '' }}
+        env:
+          IMAGE_TAG: ${{ github.sha }}
+        run: |
+          echo "Placeholder for: aws ecs register-task-definition ... "
+          echo "and: aws ecs update-service --cluster rescuevision --service rescuevision-backend --force-new-deployment"
+          echo "See deployment/DEPLOYMENT_STEPS.md and deployment/ecs-task-definition.json for the concrete, reviewed version of this step."
+          echo "This step is intentionally left as a documented placeholder: it has not been exercised against a real AWS account."
+
+      - name: No AWS credentials configured
+        if: ${{ secrets.AWS_ACCESS_KEY_ID == '' }}
+        run: |
+          echo "AWS_ACCESS_KEY_ID secret is not set - skipping all AWS deploy steps."
+          echo "This is expected for the hackathon submission repo, which has no real AWS account wired up."

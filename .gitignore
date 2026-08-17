@@ -1,0 +1,57 @@
+# --- Environment / secrets -------------------------------------------------
+.env
+.env.local
+.env.*.local
+!.env.example
+!frontend/.env.example
+!backend/.env.example
+
+# --- Python ------------------------------------------------------------
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.venv/
+venv/
+env/
+ENV/
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+*.egg-info/
+dist/
+build/
+
+# --- Backend local data (evidence files + local incident store) --------
+backend/data/
+data/
+
+# --- Node / frontend -----------------------------------------------------
+node_modules/
+frontend/dist/
+frontend/node_modules/
+.vite/
+*.local
+
+# --- Docker ---------------------------------------------------------------
+*.pid
+
+# --- IDE / editors -------------------------------------------------------
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# --- OS ---------------------------------------------------------------
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# --- Evaluation ------------------------------------------------------------
+# evaluation/results/ is intentionally NOT ignored: the measured JSON there
+# is the evaluation evidence required by the competition submission, not a
+# disposable build artifact. Only a generic scratch/output dir is ignored.
+evaluation/output/
+*.log

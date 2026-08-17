@@ -1,0 +1,2304 @@
+{
+  "run_timestamp_utc": "2026-08-17T16:16:56.965469+00:00",
+  "environment": {
+    "python_version": "3.11.9",
+    "platform": "Windows-10-10.0.26200-SP0",
+    "processor": "Intel64 Family 6 Model 142 Stepping 12, GenuineIntel",
+    "opencv_version": "5.0.0",
+    "note": "Performance numbers below were measured on this single development machine at this point in time; they are not a universal or hardware-independent benchmark."
+  },
+  "config_used": {
+    "thresholds": {
+      "min_frame_confidence": 0.35,
+      "possible_incident_seconds": 3.0,
+      "confirmed_incident_seconds": 8.0,
+      "temporal_window_seconds": 15.0,
+      "motion_score_threshold": 0.15,
+      "fire_color_ratio_threshold": 0.06,
+      "smoke_color_ratio_threshold": 0.1,
+      "horizontal_aspect_ratio_threshold": 1.4,
+      "fall_no_recovery_seconds": 5.0,
+      "obstruction_area_ratio_threshold": 0.2,
+      "obstruction_persistence_seconds": 6.0
+    },
+    "agent_policy": {
+      "high_confidence_autonomous_threshold": 0.85,
+      "human_approval_confidence_ceiling": 0.85,
+      "max_notifications_per_incident": 3,
+      "person_down_always_requires_approval": true
+    },
+    "monitoring": {
+      "normal_interval_seconds": 5.0,
+      "possible_incident_interval_seconds": 2.0,
+      "confirmed_incident_interval_seconds": 0.5
+    },
+    "region_of_interest": {
+      "x": 0.0,
+      "y": 0.0,
+      "w": 1.0,
+      "h": 1.0
+    }
+  },
+  "vision_detection_quality": {
+    "methodology": "n=4 synthetic scenario clips only (fire_smoke, person_down, route_obstruction, normal). This is NOT a statistically meaningful benchmark -- it is an illustrative, fully-reproducible smoke test of the pipeline's detection logic on deterministic synthetic footage, not a claim of real-world accuracy. Positive class = 'scenario reaches confirmed state'.",
+    "per_scenario": {
+      "fire_smoke": {
+        "is_incident_scenario": true,
+        "num_frames_run": 260,
+        "fps_assumed": 15.0,
+        "states_seen": [
+          "confirmed",
+          "none",
+          "possible"
+        ],
+        "reached_possible": true,
+        "reached_confirmed": true,
+        "time_to_possible_seconds": 9.533333333333333,
+        "time_to_confirmed_seconds": 14.266666666666667,
+        "frame_index_of_first_confirmed": 214,
+        "peak_confidence": 0.3892
+      },
+      "person_down": {
+        "is_incident_scenario": true,
+        "num_frames_run": 260,
+        "fps_assumed": 15.0,
+        "states_seen": [
+          "confirmed",
+          "none",
+          "possible"
+        ],
+        "reached_possible": true,
+        "reached_confirmed": true,
+        "time_to_possible_seconds": 5.933333333333334,
+        "time_to_confirmed_seconds": 10.866666666666667,
+        "frame_index_of_first_confirmed": 163,
+        "peak_confidence": 0.4225
+      },
+      "route_obstruction": {
+        "is_incident_scenario": true,
+        "num_frames_run": 260,
+        "fps_assumed": 15.0,
+        "states_seen": [
+          "confirmed",
+          "none",
+          "possible"
+        ],
+        "reached_possible": true,
+        "reached_confirmed": true,
+        "time_to_possible_seconds": 6.133333333333334,
+        "time_to_confirmed_seconds": 11.066666666666666,
+        "frame_index_of_first_confirmed": 166,
+        "peak_confidence": 0.6061
+      },
+      "normal": {
+        "is_incident_scenario": false,
+        "num_frames_run": 260,
+        "fps_assumed": 15.0,
+        "states_seen": [
+          "none"
+        ],
+        "reached_possible": false,
+        "reached_confirmed": false,
+        "time_to_possible_seconds": null,
+        "time_to_confirmed_seconds": null,
+        "frame_index_of_first_confirmed": null,
+        "peak_confidence": 0.0
+      }
+    },
+    "confusion_matrix_n4": {
+      "true_positives": 3,
+      "false_negatives": 0,
+      "false_positives": 0,
+      "true_negatives": 1,
+      "normal_scenario_reached_possible_state": false
+    },
+    "metrics_n4_illustrative_only": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "false_positive_rate": 0.0,
+      "false_negative_rate": 0.0
+    }
+  },
+  "performance": {
+    "vision_frame_latency_per_scenario": {
+      "methodology": "Timed OpenCV5Processor.process() + scenario detector .detect() + TemporalAnalyzer.update() only, per frame, over 200 pre-generated frames per scenario at 15.0 fps synthetic source framerate. Synthetic-frame *rendering* time is excluded (frames generated before timing starts). Measured on THIS development machine only -- not a universal/hardware-independent number.",
+      "per_scenario": {
+        "fire_smoke": {
+          "n": 200,
+          "mean_ms": 18.6357,
+          "median_ms": 16.4849,
+          "p95_ms": 30.3743,
+          "min_ms": 12.158,
+          "max_ms": 92.8082,
+          "derived_fps_from_mean": 53.66
+        },
+        "person_down": {
+          "n": 200,
+          "mean_ms": 13.2318,
+          "median_ms": 12.5133,
+          "p95_ms": 17.3204,
+          "min_ms": 10.7723,
+          "max_ms": 22.5437,
+          "derived_fps_from_mean": 75.58
+        },
+        "route_obstruction": {
+          "n": 200,
+          "mean_ms": 14.4444,
+          "median_ms": 13.6548,
+          "p95_ms": 18.4314,
+          "min_ms": 11.3417,
+          "max_ms": 50.5274,
+          "derived_fps_from_mean": 69.23
+        },
+        "normal": {
+          "n": 200,
+          "mean_ms": 17.3222,
+          "median_ms": 15.4034,
+          "p95_ms": 27.833,
+          "min_ms": 11.2111,
+          "max_ms": 51.4499,
+          "derived_fps_from_mean": 57.73
+        }
+      }
+    },
+    "vision_frame_latency_combined": {
+      "n": 800,
+      "mean_ms": 15.6838,
+      "median_ms": 14.7472,
+      "p95_ms": 20.7444,
+      "min_ms": 11.1526,
+      "max_ms": 59.8987,
+      "derived_fps_from_mean": 63.76,
+      "total_frames_pooled": 800,
+      "scenarios_pooled": [
+        "fire_smoke",
+        "person_down",
+        "route_obstruction",
+        "normal"
+      ]
+    },
+    "agent_decision_latency": {
+      "n": 3000,
+      "mean_ms": 0.0052,
+      "median_ms": 0.0042,
+      "p95_ms": 0.0089,
+      "min_ms": 0.0023,
+      "max_ms": 0.163,
+      "derived_fps_from_mean": 193073.8,
+      "methodology": "Timed AgentPolicy.evaluate() alone (pure/deterministic function, no I/O) over 15 representative evidence dicts x 200 repeats = 3000 calls."
+    },
+    "end_to_end_latency_per_scenario": {
+      "methodology": "Timed VisionPipeline.process_frame() (processor + detector + temporal + evidence extraction, including evidence-frame JPEG encoding once a signal is present) followed by AgentPolicy.evaluate(), per frame, over 200 frames per scenario. Measured on this development machine only.",
+      "per_scenario": {
+        "fire_smoke": {
+          "n": 200,
+          "mean_ms": 16.8274,
+          "median_ms": 16.1,
+          "p95_ms": 22.5932,
+          "min_ms": 11.3701,
+          "max_ms": 36.7801,
+          "derived_fps_from_mean": 59.43
+        },
+        "person_down": {
+          "n": 200,
+          "mean_ms": 16.358,
+          "median_ms": 15.4777,
+          "p95_ms": 21.3968,
+          "min_ms": 11.8792,
+          "max_ms": 58.2597,
+          "derived_fps_from_mean": 61.13
+        },
+        "route_obstruction": {
+          "n": 200,
+          "mean_ms": 14.7599,
+          "median_ms": 14.4016,
+          "p95_ms": 19.367,
+          "min_ms": 10.6521,
+          "max_ms": 25.0526,
+          "derived_fps_from_mean": 67.75
+        },
+        "normal": {
+          "n": 200,
+          "mean_ms": 12.066,
+          "median_ms": 11.3746,
+          "p95_ms": 14.7069,
+          "min_ms": 10.2164,
+          "max_ms": 73.0128,
+          "derived_fps_from_mean": 82.88
+        }
+      }
+    }
+  },
+  "agent_evaluation": {
+    "methodology": "Cartesian product of scenario x state x confidence run through the actual AgentPolicy.evaluate(), compared against an independently re-derived expectation of the documented rules in backend/app/agent/policy.py. 'matches_documented_policy' is a live pass/fail, not asserted blindly.",
+    "total_rows": 108,
+    "mismatches": 0,
+    "all_rows_match_documented_policy": true,
+    "human_escalation_rate_among_confirmed": 0.7037,
+    "confirmed_rows_considered": 27,
+    "confirmed_rows_requiring_human_approval": 19,
+    "rows": [
+      {
+        "scenario": "fire_smoke",
+        "state": "none",
+        "confidence": 0.0,
+        "duration_seconds": 0.0,
+        "actual": {
+          "severity": "NONE",
+          "decision": "CONTINUE_OBSERVATION",
+          "action": "NONE",
+          "requires_human_approval": false
+        },
+        "expected": {
+          "severity": "NONE",
+          "decision": "CONTINUE_OBSERVATION",
+          "action": "NONE",
+          "requires_human_approval": false
+        },
+        "matches_documented_policy": true
+      },
+      {
+        "scenario": "fire_smoke",
+        "state": "none",
+        "confidence": 0.2,
+        "duration_seconds": 0.0,
+        "actual": {
+          "severity": "NONE",
+          "decision": "CONTINUE_OBSERVATION",
+          "action": "NONE",
+          "requires_human_approval": false
+        },
+        "expected": {
+          "severity": "NONE",
+          "decision": "CONTINUE_OBSERVATION",
+          "action": "NONE",
+          "requires_human_approval": false
+        },
+        "matches_documented_policy": true
+      },
+      {
+        "scenario": "fire_smoke",
+        "state": "none",
+        "confidence": 0.34,
+        "duration_seconds": 0.0,
+        "actual": {
+          "severity": "NONE",
+          "decision": "CONTINUE_OBSERVATION",
+          "action": "NONE",
+          "requires_human_approval": false
+        },
+        "expected": {
+          "severity": "NONE",
+          "decision": "CONTINUE_OBSERVATION",
+          "action": "NONE",
+          "requires_human_approval": false
+        },
+        "matches_documented_policy": true
+      },
+      {
+        "scenario": "fire_smoke",
+        "state": "none",
+        "confidence": 0.35,
+        "duration_seconds": 0.0,
+        "actual": {
+          "severity": "NONE",
+          "decision": "CONTINUE_OBSERVATION",
+          "action": "NONE",
+          "requires_human_approval": false
+        },
+        "expected": {
+          "severity": "NONE",
+          "decision": "CONTINUE_OBSERVATION",
+          "action": "NONE",
+          "requires_human_approval": false
+        },
+        "matches_documented_policy": true
+      },
+      {
+        "scenario": "fire_smoke",
+        "state": "none",
+        "confidence": 0.5,
+        "duration_seconds": 0.0,
+        "actual": {
+          "severity": "NONE",
+          "decision": "CONTINUE_OBSERVATION",
+          "action": "NONE",
+          "requires_human_approval": false
+        },
+        "expected": {
+          "severity": "NONE",
+          "decision": "CONTINUE_OBSERVATION",
+          "action": "NONE",
+          "requires_human_approval": false
+        },
+        "matches_documented_policy": true
+      },
+      {
+        "scenario": "fire_smoke",
+        "state": "none",
+        "confidence": 0.6,
+        "duration_seconds": 0.0,
+        "actual": {
+          "severity": "NONE",
+          "decision": "CONTINUE_OBSERVATION",
+          "action": "NONE",
+          "requires_human_approval": false
+        },
+        "expected": {
+          "severity": "NONE",
+          "decision": "CONTINUE_OBSERVATION",
+          "action": "NONE",
+          "requires_human_approval": false
+        },
+        "matches_documented_policy": true
+      },
+      {
+        "scenario": "fire_smoke",
+        "state": "none",
+        "confidence": 0.7,
+        "duration_seconds": 0.0,
+        "actual": {
+          "severity": "NONE",
+          "decision": "CONTINUE_OBSERVATION",
+          "action": "NONE",
+          "requires_human_approval": false
+        },
+        "expected": {
+          "severity": "NONE",
+          "decision": "CONTINUE_OBSERVATION",
+          "action": "NONE",
+          "requires_human_approval": false
+        },
+        "matches_documented_policy": true
+      },
+      {
+        "scenario": "fire_smoke",
+        "state": "none",
+        "confidence": 0.84,
+        "duration_seconds": 0.0,
+        "actual": {
+          "severity": "NONE",
+          "decision": "CONTINUE_OBSERVATION",
+          "action": "NONE",
+          "requires_human_approval": false
+        },
+        "expected": {
+          "severity": "NONE",
+          "decision": "CONTINUE_OBSERVATION",
+          "action": "NONE",
+          "requires_human_approval": false
+        },
+        "matches_documented_policy": true
+      },
+      {
+        "scenario": "fire_smoke",
+        "state": "none",
+        "confidence": 0.85,
+        "duration_seconds": 0.0,
+        "actual": {
+          "severity": "NONE",
+          "decision": "CONTINUE_OBSERVATION",
+          "action": "NONE",
+          "requires_human_approval": false
+        },
+        "expected": {
+          "severity": "NONE",
+          "decision": "CONTINUE_OBSERVATION",
+          "action": "NONE",
+          "requires_human_approval": false
+        },
+        "matches_documented_policy": true
+      },
+      {
+        "scenario": "fire_smoke",
+        "state": "none",
+        "confidence": 0.86,
+        "duration_seconds": 0.0,
+        "actual": {
+          "severity": "NONE",
+          "decision": "CONTINUE_OBSERVATION",
+          "action": "NONE",
+          "requires_human_approval": false
+        },
+        "expected": {
+          "severity": "NONE",
+          "decision": "CONTINUE_OBSERVATION",
+          "action": "NONE",
+          "requires_human_approval": false
+        },
+        "matches_documented_policy": true
+      },
+      {
+        "scenario": "fire_smoke",
+        "state": "none",
+        "confidence": 0.95,
+        "duration_seconds": 0.0,
+        "actual": {
+          "severity": "NONE",
+          "decision": "CONTINUE_OBSERVATION",
+          "action": "NONE",
+          "requires_human_approval": false
+        },
+        "expected": {
+          "severity": "NONE",
+          "decision": "CONTINUE_OBSERVATION",
+          "action": "NONE",
+          "requires_human_approval": false
+        },
+        "matches_documented_policy": true
+      },
+      {
+        "scenario": "fire_smoke",
+        "state": "none",
+        "confidence": 1.0,
+        "duration_seconds": 0.0,
+        "actual": {
+          "severity": "NONE",
+          "decision": "CONTINUE_OBSERVATION",
+          "action": "NONE",
+          "requires_human_approval": false
+        },
+        "expected": {
+          "severity": "NONE",
+          "decision": "CONTINUE_OBSERVATION",
+          "action": "NONE",
+          "requires_human_approval": false
+        },
+        "matches_documented_policy": true
+      },
+      {
+        "scenario": "fire_smoke",
+        "state": "possible",
+        "confidence": 0.0,
+        "duration_seconds": 4.0,
+        "actual": {
+          "severity": "NONE",
+          "decision": "CONTINUE_OBSERVATION",
+          "action": "NONE",
+          "requires_human_approval": false
+        },
+        "expected": {
+          "severity": "NONE",
+          "decision": "CONTINUE_OBSERVATION",
+          "action": "NONE",
+          "requires_human_approval": false
+        },
+        "matches_documented_policy": true
+      },
+      {
+        "scenario": "fire_smoke",
+        "state": "possible",
+        "confidence": 0.2,
+        "duration_seconds": 4.0,
+        "actual": {
+          "severity": "NONE",
+          "decision": "CONTINUE_OBSERVATION",
+          "action": "NONE",
+          "requires_human_approval": false
+        },
+        "expected": {
+          "severity": "NONE",
+          "decision": "CONTINUE_OBSERVATION",
+          "action": "NONE",
+          "requires_human_approval": false
+        },
+        "matches_documented_policy": true
+      },
+      {
+        "scenario": "fire_smoke",
+        "state": "possible",
+        "confidence": 0.34,
+        "duration_seconds": 4.0,
+        "actual": {
+          "severity": "NONE",
+          "decision": "CONTINUE_OBSERVATION",
+          "action": "NONE",
+          "requires_human_approval": false
+        },
+        "expected": {
+          "severity": "NONE",
+          "decision": "CONTINUE_OBSERVATION",
+          "action": "NONE",
+          "requires_human_approval": false
+        },
+        "matches_documented_policy": true
+      },
+      {
+        "scenario": "fire_smoke",
+        "state": "possible",
+        "confidence": 0.35,
+        "duration_seconds": 4.0,
+        "actual": {
+          "severity": "LOW",
+          "decision": "INCREASE_MONITORING",
+          "action": "STORE_EVIDENCE_ONLY",
+          "requires_human_approval": false
+        },
+        "expected": {
+          "severity": "LOW",
+          "decision": "INCREASE_MONITORING",
+          "action": "STORE_EVIDENCE_ONLY",
+          "requires_human_approval": false
+        },
+        "matches_documented_policy": true
+      },
+      {
+        "scenario": "fire_smoke",
+        "state": "possible",
+        "confidence": 0.5,
+        "duration_seconds": 4.0,
+        "actual": {
+          "severity": "LOW",
+          "decision": "INCREASE_MONITORING",
+          "action": "STORE_EVIDENCE_ONLY",
+          "requires_human_approval": false
+        },
+        "expected": {
+          "severity": "LOW",
+          "decision": "INCREASE_MONITORING",
+          "action": "STORE_EVIDENCE_ONLY",
+          "requires_human_approval": false
+        },
+        "matches_documented_policy": true
+      },
+      {
+        "scenario": "fire_smoke",
+        "state": "possible",
+        "confidence": 0.6,
+        "duration_seconds": 4.0,
+        "actual": {
+          "severity": "MEDIUM",
+          "decision": "INCREASE_MONITORING",
+          "action": "STORE_EVIDENCE_ONLY",
+          "requires_human_approval": false
+        },
+        "expected": {
+          "severity": "MEDIUM",
+          "decision": "INCREASE_MONITORING",
+          "action": "STORE_EVIDENCE_ONLY",
+          "requires_human_approval": false
+        },
+        "matches_documented_policy": true
+      },
+      {
+        "scenario": "fire_smoke",
+        "state": "possible",
+        "confidence": 0.7,
+        "duration_seconds": 4.0,
+        "actual": {
+          "severity": "MEDIUM",
+          "decision": "INCREASE_MONITORING",
+          "action": "STORE_EVIDENCE_ONLY",
+          "requires_human_approval": false
+        },
+        "expected": {
+          "severity": "MEDIUM",
+          "decision": "INCREASE_MONITORING",
+          "action": "STORE_EVIDENCE_ONLY",
+          "requires_human_approval": false
+        },
+        "matches_documented_policy": true
+      },
+      {
+        "scenario": "fire_smoke",
+        "state": "possible",
+        "confidence": 0.84,
+        "duration_seconds": 4.0,
+        "actual": {
+          "severity": "MEDIUM",
+          "decision": "INCREASE_MONITORING",
+          "action": "STORE_EVIDENCE_ONLY",
+          "requires_human_approval": false
+        },
+        "expected": {
+          "severity": "MEDIUM",
+          "decision": "INCREASE_MONITORING",
+          "action": "STORE_EVIDENCE_ONLY",
+          "requires_human_approval": false
+        },
+        "matches_documented_policy": true
+      },
+      {
+        "scenario": "fire_smoke",
+        "state": "possible",
+        "confidence": 0.85,
+        "duration_seconds": 4.0,
+        "actual": {
+          "severity": "MEDIUM",
+          "decision": "INCREASE_MONITORING",
+          "action": "STORE_EVIDENCE_ONLY",
+          "requires_human_approval": false
+        },
+        "expected": {
+          "severity": "MEDIUM",
+          "decision": "INCREASE_MONITORING",
+          "action": "STORE_EVIDENCE_ONLY",
+          "requires_human_approval": false
+        },
+        "matches_documented_policy": true
+      },
+      {
+        "scenario": "fire_smoke",
+        "state": "possible",
+        "confidence": 0.86,
+        "duration_seconds": 4.0,
+        "actual": {
+          "severity": "MEDIUM",
+          "decision": "INCREASE_MONITORING",
+          "action": "STORE_EVIDENCE_ONLY",
+          "requires_human_approval": false
+        },
+        "expected": {
+          "severity": "MEDIUM",
+          "decision": "INCREASE_MONITORING",
+          "action": "STORE_EVIDENCE_ONLY",
+          "requires_human_approval": false
+        },
+        "matches_documented_policy": true
+      },
+      {
+        "scenario": "fire_smoke",
+        "state": "possible",
+        "confidence": 0.95,
+        "duration_seconds": 4.0,
+        "actual": {
+          "severity": "MEDIUM",
+          "decision": "INCREASE_MONITORING",
+          "action": "STORE_EVIDENCE_ONLY",
+          "requires_human_approval": false
+        },
+        "expected": {
+          "severity": "MEDIUM",
+          "decision": "INCREASE_MONITORING",
+          "action": "STORE_EVIDENCE_ONLY",
+          "requires_human_approval": false
+        },
+        "matches_documented_policy": true
+      },
+      {
+        "scenario": "fire_smoke",
+        "state": "possible",
+        "confidence": 1.0,
+        "duration_seconds": 4.0,
+        "actual": {
+          "severity": "MEDIUM",
+          "decision": "INCREASE_MONITORING",
+          "action": "STORE_EVIDENCE_ONLY",
+          "requires_human_approval": false
+        },
+        "expected": {
+          "severity": "MEDIUM",
+          "decision": "INCREASE_MONITORING",
+          "action": "STORE_EVIDENCE_ONLY",
+          "requires_human_approval": false
+        },
+        "matches_documented_policy": true
+      },
+      {
+        "scenario": "fire_smoke",
+        "state": "confirmed",
+        "confidence": 0.0,
+        "duration_seconds": 10.0,
+        "actual": {
+          "severity": "NONE",
+          "decision": "CONTINUE_OBSERVATION",
+          "action": "NONE",
+          "requires_human_approval": false
+        },
+        "expected": {
+          "severity": "NONE",
+          "decision": "CONTINUE_OBSERVATION",
+          "action": "NONE",
+          "requires_human_approval": false
+        },
+        "matches_documented_policy": true
+      },
+      {
+        "scenario": "fire_smoke",
+        "state": "confirmed",
+        "confidence": 0.2,
+        "duration_seconds": 10.0,
+        "actual": {
+          "severity": "NONE",
+          "decision": "CONTINUE_OBSERVATION",
+          "action": "NONE",
+          "requires_human_approval": false
+        },
+        "expected": {
+          "severity": "NONE",
+          "decision": "CONTINUE_OBSERVATION",
+          "action": "NONE",
+          "requires_human_approval": false
+        },
+        "matches_documented_policy": true
+      },
+      {
+        "scenario": "fire_smoke",
+        "state": "confirmed",
+        "confidence": 0.34,
+        "duration_seconds": 10.0,
+        "actual": {
+          "severity": "NONE",
+          "decision": "CONTINUE_OBSERVATION",
+          "action": "NONE",
+          "requires_human_approval": false
+        },
+        "expected": {
+          "severity": "NONE",
+          "decision": "CONTINUE_OBSERVATION",
+          "action": "NONE",
+          "requires_human_approval": false
+        },
+        "matches_documented_policy": true
+      },
+      {
+        "scenario": "fire_smoke",
+        "state": "confirmed",
+        "confidence": 0.35,
+        "duration_seconds": 10.0,
+        "actual": {
+          "severity": "MEDIUM",
+          "decision": "CREATE_INCIDENT",
+          "action": "REQUEST_HUMAN_APPROVAL",
+          "requires_human_approval": true
+        },
+        "expected": {
+          "severity": "MEDIUM",
+          "decision": "CREATE_INCIDENT",
+          "action": "REQUEST_HUMAN_APPROVAL",
+          "requires_human_approval": true
+        },
+        "matches_documented_policy": true
+      },
+      {
+        "scenario": "fire_smoke",
+        "state": "confirmed",
+        "confidence": 0.5,
+        "duration_seconds": 10.0,
+        "actual": {
+          "severity": "MEDIUM",
+          "decision": "CREATE_INCIDENT",
+          "action": "REQUEST_HUMAN_APPROVAL",
+          "requires_human_approval": true
+        },
+        "expected": {
+          "severity": "MEDIUM",
+          "decision": "CREATE_INCIDENT",
+          "action": "REQUEST_HUMAN_APPROVAL",
+          "requires_human_approval": true
+        },
+        "matches_documented_policy": true
+      },
+      {
+        "scenario": "fire_smoke",
+        "state": "confirmed",
+        "confidence": 0.6,
+        "duration_seconds": 10.0,
+        "actual": {
+          "severity": "MEDIUM",
+          "decision": "CREATE_INCIDENT",
+          "action": "REQUEST_HUMAN_APPROVAL",
+          "requires_human_approval": true
+        },
+        "expected": {
+          "severity": "MEDIUM",
+          "decision": "CREATE_INCIDENT",
+          "action": "REQUEST_HUMAN_APPROVAL",
+          "requires_human_approval": true
+        },
+        "matches_documented_policy": true
+      },
+      {
+        "scenario": "fire_smoke",
+        "state": "confirmed",
+        "confidence": 0.7,
+        "duration_seconds": 10.0,
+        "actual": {
+          "severity": "MEDIUM",
+          "decision": "CREATE_INCIDENT",
+          "action": "REQUEST_HUMAN_APPROVAL",
+          "requires_human_approval": true
+        },
+        "expected": {
+          "severity": "MEDIUM",
+          "decision": "CREATE_INCIDENT",
+          "action": "REQUEST_HUMAN_APPROVAL",
+          "requires_human_approval": true
+        },
+        "matches_documented_policy": true
+      },
+      {
+        "scenario": "fire_smoke",
+        "state": "confirmed",
+        "confidence": 0.84,
+        "duration_seconds": 10.0,
+        "actual": {
+          "severity": "MEDIUM",
+          "decision": "CREATE_INCIDENT",
+          "action": "REQUEST_HUMAN_APPROVAL",
+          "requires_human_approval": true
+        },
+        "expected": {
+          "severity": "MEDIUM",
+          "decision": "CREATE_INCIDENT",
+          "action": "REQUEST_HUMAN_APPROVAL",
+          "requires_human_approval": true
+        },
+        "matches_documented_policy": true
+      },
+      {
+        "scenario": "fire_smoke",
+        "state": "confirmed",
+        "confidence": 0.85,
+        "duration_seconds": 10.0,
+        "actual": {
+          "severity": "HIGH",
+          "decision": "CREATE_INCIDENT",
+          "action": "SEND_ALERT",
+          "requires_human_approval": false
+        },
+        "expected": {
+          "severity": "HIGH",
+          "decision": "CREATE_INCIDENT",
+          "action": "SEND_ALERT",
+          "requires_human_approval": false
+        },
+        "matches_documented_policy": true
+      },
+      {
+        "scenario": "fire_smoke",
+        "state": "confirmed",
+        "confidence": 0.86,
+        "duration_seconds": 10.0,
+        "actual": {
+          "severity": "HIGH",
+          "decision": "CREATE_INCIDENT",
+          "action": "SEND_ALERT",
+          "requires_human_approval": false
+        },
+        "expected": {
+          "severity": "HIGH",
+          "decision": "CREATE_INCIDENT",
+          "action": "SEND_ALERT",
+          "requires_human_approval": false
+        },
+        "matches_documented_policy": true
+      },
+      {
+        "scenario": "fire_smoke",
+        "state": "confirmed",
+        "confidence": 0.95,
+        "duration_seconds": 10.0,
+        "actual": {
+          "severity": "HIGH",
+          "decision": "CREATE_INCIDENT",
+          "action": "SEND_ALERT",
+          "requires_human_approval": false
+        },
+        "expected": {
+          "severity": "HIGH",
+          "decision": "CREATE_INCIDENT",
+          "action": "SEND_ALERT",
+          "requires_human_approval": false
+        },
+        "matches_documented_policy": true
+      },
+      {
+        "scenario": "fire_smoke",
+        "state": "confirmed",
+        "confidence": 1.0,
+        "duration_seconds": 10.0,
+        "actual": {
+          "severity": "HIGH",
+          "decision": "CREATE_INCIDENT",
+          "action": "SEND_ALERT",
+          "requires_human_approval": false
+        },
+        "expected": {
+          "severity": "HIGH",
+          "decision": "CREATE_INCIDENT",
+          "action": "SEND_ALERT",
+          "requires_human_approval": false
+        },
+        "matches_documented_policy": true
+      },
+      {
+        "scenario": "person_down",
+        "state": "none",
+        "confidence": 0.0,
+        "duration_seconds": 0.0,
+        "actual": {
+          "severity": "NONE",
+          "decision": "CONTINUE_OBSERVATION",
+          "action": "NONE",
+          "requires_human_approval": false
+        },
+        "expected": {
+          "severity": "NONE",
+          "decision": "CONTINUE_OBSERVATION",
+          "action": "NONE",
+          "requires_human_approval": false
+        },
+        "matches_documented_policy": true
+      },
+      {
+        "scenario": "person_down",
+        "state": "none",
+        "confidence": 0.2,
+        "duration_seconds": 0.0,
+        "actual": {
+          "severity": "NONE",
+          "decision": "CONTINUE_OBSERVATION",
+          "action": "NONE",
+          "requires_human_approval": false
+        },
+        "expected": {
+          "severity": "NONE",
+          "decision": "CONTINUE_OBSERVATION",
+          "action": "NONE",
+          "requires_human_approval": false
+        },
+        "matches_documented_policy": true
+      },
+      {
+        "scenario": "person_down",
+        "state": "none",
+        "confidence": 0.34,
+        "duration_seconds": 0.0,
+        "actual": {
+          "severity": "NONE",
+          "decision": "CONTINUE_OBSERVATION",
+          "action": "NONE",
+          "requires_human_approval": false
+        },
+        "expected": {
+          "severity": "NONE",
+          "decision": "CONTINUE_OBSERVATION",
+          "action": "NONE",
+          "requires_human_approval": false
+        },
+        "matches_documented_policy": true
+      },
+      {
+        "scenario": "person_down",
+        "state": "none",
+        "confidence": 0.35,
+        "duration_seconds": 0.0,
+        "actual": {
+          "severity": "NONE",
+          "decision": "CONTINUE_OBSERVATION",
+          "action": "NONE",
+          "requires_human_approval": false
+        },
+        "expected": {
+          "severity": "NONE",
+          "decision": "CONTINUE_OBSERVATION",
+          "action": "NONE",
+          "requires_human_approval": false
+        },
+        "matches_documented_policy": true
+      },
+      {
+        "scenario": "person_down",
+        "state": "none",
+        "confidence": 0.5,
+        "duration_seconds": 0.0,
+        "actual": {
+          "severity": "NONE",
+          "decision": "CONTINUE_OBSERVATION",
+          "action": "NONE",
+          "requires_human_approval": false
+        },
+        "expected": {
+          "severity": "NONE",
+          "decision": "CONTINUE_OBSERVATION",
+          "action": "NONE",
+          "requires_human_approval": false
+        },
+        "matches_documented_policy": true
+      },
+      {
+        "scenario": "person_down",
+        "state": "none",
+        "confidence": 0.6,
+        "duration_seconds": 0.0,
+        "actual": {
+          "severity": "NONE",
+          "decision": "CONTINUE_OBSERVATION",
+          "action": "NONE",
+          "requires_human_approval": false
+        },
+        "expected": {
+          "severity": "NONE",
+          "decision": "CONTINUE_OBSERVATION",
+          "action": "NONE",
+          "requires_human_approval": false
+        },
+        "matches_documented_policy": true
+      },
+      {
+        "scenario": "person_down",
+        "state": "none",
+        "confidence": 0.7,
+        "duration_seconds": 0.0,
+        "actual": {
+          "severity": "NONE",
+          "decision": "CONTINUE_OBSERVATION",
+          "action": "NONE",
+          "requires_human_approval": false
+        },
+        "expected": {
+          "severity": "NONE",
+          "decision": "CONTINUE_OBSERVATION",
+          "action": "NONE",
+          "requires_human_approval": false
+        },
+        "matches_documented_policy": true
+      },
+      {
+        "scenario": "person_down",
+        "state": "none",
+        "confidence": 0.84,
+        "duration_seconds": 0.0,
+        "actual": {
+          "severity": "NONE",
+          "decision": "CONTINUE_OBSERVATION",
+          "action": "NONE",
+          "requires_human_approval": false
+        },
+        "expected": {
+          "severity": "NONE",
+          "decision": "CONTINUE_OBSERVATION",
+          "action": "NONE",
+          "requires_human_approval": false
+        },
+        "matches_documented_policy": true
+      },
+      {
+        "scenario": "person_down",
+        "state": "none",
+        "confidence": 0.85,
+        "duration_seconds": 0.0,
+        "actual": {
+          "severity": "NONE",
+          "decision": "CONTINUE_OBSERVATION",
+          "action": "NONE",
+          "requires_human_approval": false
+        },
+        "expected": {
+          "severity": "NONE",
+          "decision": "CONTINUE_OBSERVATION",
+          "action": "NONE",
+          "requires_human_approval": false
+        },
+        "matches_documented_policy": true
+      },
+      {
+        "scenario": "person_down",
+        "state": "none",
+        "confidence": 0.86,
+        "duration_seconds": 0.0,
+        "actual": {
+          "severity": "NONE",
+          "decision": "CONTINUE_OBSERVATION",
+          "action": "NONE",
+          "requires_human_approval": false
+        },
+        "expected": {
+          "severity": "NONE",
+          "decision": "CONTINUE_OBSERVATION",
+          "action": "NONE",
+          "requires_human_approval": false
+        },
+        "matches_documented_policy": true
+      },
+      {
+        "scenario": "person_down",
+        "state": "none",
+        "confidence": 0.95,
+        "duration_seconds": 0.0,
+        "actual": {
+          "severity": "NONE",
+          "decision": "CONTINUE_OBSERVATION",
+          "action": "NONE",
+          "requires_human_approval": false
+        },
+        "expected": {
+          "severity": "NONE",
+          "decision": "CONTINUE_OBSERVATION",
+          "action": "NONE",
+          "requires_human_approval": false
+        },
+        "matches_documented_policy": true
+      },
+      {
+        "scenario": "person_down",
+        "state": "none",
+        "confidence": 1.0,
+        "duration_seconds": 0.0,
+        "actual": {
+          "severity": "NONE",
+          "decision": "CONTINUE_OBSERVATION",
+          "action": "NONE",
+          "requires_human_approval": false
+        },
+        "expected": {
+          "severity": "NONE",
+          "decision": "CONTINUE_OBSERVATION",
+          "action": "NONE",
+          "requires_human_approval": false
+        },
+        "matches_documented_policy": true
+      },
+      {
+        "scenario": "person_down",
+        "state": "possible",
+        "confidence": 0.0,
+        "duration_seconds": 4.0,
+        "actual": {
+          "severity": "NONE",
+          "decision": "CONTINUE_OBSERVATION",
+          "action": "NONE",
+          "requires_human_approval": false
+        },
+        "expected": {
+          "severity": "NONE",
+          "decision": "CONTINUE_OBSERVATION",
+          "action": "NONE",
+          "requires_human_approval": false
+        },
+        "matches_documented_policy": true
+      },
+      {
+        "scenario": "person_down",
+        "state": "possible",
+        "confidence": 0.2,
+        "duration_seconds": 4.0,
+        "actual": {
+          "severity": "NONE",
+          "decision": "CONTINUE_OBSERVATION",
+          "action": "NONE",
+          "requires_human_approval": false
+        },
+        "expected": {
+          "severity": "NONE",
+          "decision": "CONTINUE_OBSERVATION",
+          "action": "NONE",
+          "requires_human_approval": false
+        },
+        "matches_documented_policy": true
+      },
+      {
+        "scenario": "person_down",
+        "state": "possible",
+        "confidence": 0.34,
+        "duration_seconds": 4.0,
+        "actual": {
+          "severity": "NONE",
+          "decision": "CONTINUE_OBSERVATION",
+          "action": "NONE",
+          "requires_human_approval": false
+        },
+        "expected": {
+          "severity": "NONE",
+          "decision": "CONTINUE_OBSERVATION",
+          "action": "NONE",
+          "requires_human_approval": false
+        },
+        "matches_documented_policy": true
+      },
+      {
+        "scenario": "person_down",
+        "state": "possible",
+        "confidence": 0.35,
+        "duration_seconds": 4.0,
+        "actual": {
+          "severity": "LOW",
+          "decision": "INCREASE_MONITORING",
+          "action": "STORE_EVIDENCE_ONLY",
+          "requires_human_approval": false
+        },
+        "expected": {
+          "severity": "LOW",
+          "decision": "INCREASE_MONITORING",
+          "action": "STORE_EVIDENCE_ONLY",
+          "requires_human_approval": false
+        },
+        "matches_documented_policy": true
+      },
+      {
+        "scenario": "person_down",
+        "state": "possible",
+        "confidence": 0.5,
+        "duration_seconds": 4.0,
+        "actual": {
+          "severity": "LOW",
+          "decision": "INCREASE_MONITORING",
+          "action": "STORE_EVIDENCE_ONLY",
+          "requires_human_approval": false
+        },
+        "expected": {
+          "severity": "LOW",
+          "decision": "INCREASE_MONITORING",
+          "action": "STORE_EVIDENCE_ONLY",
+          "requires_human_approval": false
+        },
+        "matches_documented_policy": true
+      },
+      {
+        "scenario": "person_down",
+        "state": "possible",
+        "confidence": 0.6,
+        "duration_seconds": 4.0,
+        "actual": {
+          "severity": "MEDIUM",
+          "decision": "INCREASE_MONITORING",
+          "action": "STORE_EVIDENCE_ONLY",
+          "requires_human_approval": false
+        },
+        "expected": {
+          "severity": "MEDIUM",
+          "decision": "INCREASE_MONITORING",
+          "action": "STORE_EVIDENCE_ONLY",
+          "requires_human_approval": false
+        },
+        "matches_documented_policy": true
+      },
+      {
+        "scenario": "person_down",
+        "state": "possible",
+        "confidence": 0.7,
+        "duration_seconds": 4.0,
+        "actual": {
+          "severity": "MEDIUM",
+          "decision": "INCREASE_MONITORING",
+          "action": "STORE_EVIDENCE_ONLY",
+          "requires_human_approval": false
+        },
+        "expected": {
+          "severity": "MEDIUM",
+          "decision": "INCREASE_MONITORING",
+          "action": "STORE_EVIDENCE_ONLY",
+          "requires_human_approval": false
+        },
+        "matches_documented_policy": true
+      },
+      {
+        "scenario": "person_down",
+        "state": "possible",
+        "confidence": 0.84,
+        "duration_seconds": 4.0,
+        "actual": {
+          "severity": "MEDIUM",
+          "decision": "INCREASE_MONITORING",
+          "action": "STORE_EVIDENCE_ONLY",
+          "requires_human_approval": false
+        },
+        "expected": {
+          "severity": "MEDIUM",
+          "decision": "INCREASE_MONITORING",
+          "action": "STORE_EVIDENCE_ONLY",
+          "requires_human_approval": false
+        },
+        "matches_documented_policy": true
+      },
+      {
+        "scenario": "person_down",
+        "state": "possible",
+        "confidence": 0.85,
+        "duration_seconds": 4.0,
+        "actual": {
+          "severity": "MEDIUM",
+          "decision": "INCREASE_MONITORING",
+          "action": "STORE_EVIDENCE_ONLY",
+          "requires_human_approval": false
+        },
+        "expected": {
+          "severity": "MEDIUM",
+          "decision": "INCREASE_MONITORING",
+          "action": "STORE_EVIDENCE_ONLY",
+          "requires_human_approval": false
+        },
+        "matches_documented_policy": true
+      },
+      {
+        "scenario": "person_down",
+        "state": "possible",
+        "confidence": 0.86,
+        "duration_seconds": 4.0,
+        "actual": {
+          "severity": "MEDIUM",
+          "decision": "INCREASE_MONITORING",
+          "action": "STORE_EVIDENCE_ONLY",
+          "requires_human_approval": false
+        },
+        "expected": {
+          "severity": "MEDIUM",
+          "decision": "INCREASE_MONITORING",
+          "action": "STORE_EVIDENCE_ONLY",
+          "requires_human_approval": false
+        },
+        "matches_documented_policy": true
+      },
+      {
+        "scenario": "person_down",
+        "state": "possible",
+        "confidence": 0.95,
+        "duration_seconds": 4.0,
+        "actual": {
+          "severity": "MEDIUM",
+          "decision": "INCREASE_MONITORING",
+          "action": "STORE_EVIDENCE_ONLY",
+          "requires_human_approval": false
+        },
+        "expected": {
+          "severity": "MEDIUM",
+          "decision": "INCREASE_MONITORING",
+          "action": "STORE_EVIDENCE_ONLY",
+          "requires_human_approval": false
+        },
+        "matches_documented_policy": true
+      },
+      {
+        "scenario": "person_down",
+        "state": "possible",
+        "confidence": 1.0,
+        "duration_seconds": 4.0,
+        "actual": {
+          "severity": "MEDIUM",
+          "decision": "INCREASE_MONITORING",
+          "action": "STORE_EVIDENCE_ONLY",
+          "requires_human_approval": false
+        },
+        "expected": {
+          "severity": "MEDIUM",
+          "decision": "INCREASE_MONITORING",
+          "action": "STORE_EVIDENCE_ONLY",
+          "requires_human_approval": false
+        },
+        "matches_documented_policy": true
+      },
+      {
+        "scenario": "person_down",
+        "state": "confirmed",
+        "confidence": 0.0,
+        "duration_seconds": 10.0,
+        "actual": {
+          "severity": "NONE",
+          "decision": "CONTINUE_OBSERVATION",
+          "action": "NONE",
+          "requires_human_approval": false
+        },
+        "expected": {
+          "severity": "NONE",
+          "decision": "CONTINUE_OBSERVATION",
+          "action": "NONE",
+          "requires_human_approval": false
+        },
+        "matches_documented_policy": true
+      },
+      {
+        "scenario": "person_down",
+        "state": "confirmed",
+        "confidence": 0.2,
+        "duration_seconds": 10.0,
+        "actual": {
+          "severity": "NONE",
+          "decision": "CONTINUE_OBSERVATION",
+          "action": "NONE",
+          "requires_human_approval": false
+        },
+        "expected": {
+          "severity": "NONE",
+          "decision": "CONTINUE_OBSERVATION",
+          "action": "NONE",
+          "requires_human_approval": false
+        },
+        "matches_documented_policy": true
+      },
+      {
+        "scenario": "person_down",
+        "state": "confirmed",
+        "confidence": 0.34,
+        "duration_seconds": 10.0,
+        "actual": {
+          "severity": "NONE",
+          "decision": "CONTINUE_OBSERVATION",
+          "action": "NONE",
+          "requires_human_approval": false
+        },
+        "expected": {
+          "severity": "NONE",
+          "decision": "CONTINUE_OBSERVATION",
+          "action": "NONE",
+          "requires_human_approval": false
+        },
+        "matches_documented_policy": true
+      },
+      {
+        "scenario": "person_down",
+        "state": "confirmed",
+        "confidence": 0.35,
+        "duration_seconds": 10.0,
+        "actual": {
+          "severity": "MEDIUM",
+          "decision": "CREATE_INCIDENT",
+          "action": "REQUEST_HUMAN_APPROVAL",
+          "requires_human_approval": true
+        },
+        "expected": {
+          "severity": "MEDIUM",
+          "decision": "CREATE_INCIDENT",
+          "action": "REQUEST_HUMAN_APPROVAL",
+          "requires_human_approval": true
+        },
+        "matches_documented_policy": true
+      },
+      {
+        "scenario": "person_down",
+        "state": "confirmed",
+        "confidence": 0.5,
+        "duration_seconds": 10.0,
+        "actual": {
+          "severity": "MEDIUM",
+          "decision": "CREATE_INCIDENT",
+          "action": "REQUEST_HUMAN_APPROVAL",
+          "requires_human_approval": true
+        },
+        "expected": {
+          "severity": "MEDIUM",
+          "decision": "CREATE_INCIDENT",
+          "action": "REQUEST_HUMAN_APPROVAL",
+          "requires_human_approval": true
+        },
+        "matches_documented_policy": true
+      },
+      {
+        "scenario": "person_down",
+        "state": "confirmed",
+        "confidence": 0.6,
+        "duration_seconds": 10.0,
+        "actual": {
+          "severity": "MEDIUM",
+          "decision": "CREATE_INCIDENT",
+          "action": "REQUEST_HUMAN_APPROVAL",
+          "requires_human_approval": true
+        },
+        "expected": {
+          "severity": "MEDIUM",
+          "decision": "CREATE_INCIDENT",
+          "action": "REQUEST_HUMAN_APPROVAL",
+          "requires_human_approval": true
+        },
+        "matches_documented_policy": true
+      },
+      {
+        "scenario": "person_down",
+        "state": "confirmed",
+        "confidence": 0.7,
+        "duration_seconds": 10.0,
+        "actual": {
+          "severity": "MEDIUM",
+          "decision": "CREATE_INCIDENT",
+          "action": "REQUEST_HUMAN_APPROVAL",
+          "requires_human_approval": true
+        },
+        "expected": {
+          "severity": "MEDIUM",
+          "decision": "CREATE_INCIDENT",
+          "action": "REQUEST_HUMAN_APPROVAL",
+          "requires_human_approval": true
+        },
+        "matches_documented_policy": true
+      },
+      {
+        "scenario": "person_down",
+        "state": "confirmed",
+        "confidence": 0.84,
+        "duration_seconds": 10.0,
+        "actual": {
+          "severity": "MEDIUM",
+          "decision": "CREATE_INCIDENT",
+          "action": "REQUEST_HUMAN_APPROVAL",
+          "requires_human_approval": true
+        },
+        "expected": {
+          "severity": "MEDIUM",
+          "decision": "CREATE_INCIDENT",
+          "action": "REQUEST_HUMAN_APPROVAL",
+          "requires_human_approval": true
+        },
+        "matches_documented_policy": true
+      },
+      {
+        "scenario": "person_down",
+        "state": "confirmed",
+        "confidence": 0.85,
+        "duration_seconds": 10.0,
+        "actual": {
+          "severity": "HIGH",
+          "decision": "CREATE_INCIDENT",
+          "action": "REQUEST_HUMAN_APPROVAL",
+          "requires_human_approval": true
+        },
+        "expected": {
+          "severity": "HIGH",
+          "decision": "CREATE_INCIDENT",
+          "action": "REQUEST_HUMAN_APPROVAL",
+          "requires_human_approval": true
+        },
+        "matches_documented_policy": true
+      },
+      {
+        "scenario": "person_down",
+        "state": "confirmed",
+        "confidence": 0.86,
+        "duration_seconds": 10.0,
+        "actual": {
+          "severity": "HIGH",
+          "decision": "CREATE_INCIDENT",
+          "action": "REQUEST_HUMAN_APPROVAL",
+          "requires_human_approval": true
+        },
+        "expected": {
+          "severity": "HIGH",
+          "decision": "CREATE_INCIDENT",
+          "action": "REQUEST_HUMAN_APPROVAL",
+          "requires_human_approval": true
+        },
+        "matches_documented_policy": true
+      },
+      {
+        "scenario": "person_down",
+        "state": "confirmed",
+        "confidence": 0.95,
+        "duration_seconds": 10.0,
+        "actual": {
+          "severity": "HIGH",
+          "decision": "CREATE_INCIDENT",
+          "action": "REQUEST_HUMAN_APPROVAL",
+          "requires_human_approval": true
+        },
+        "expected": {
+          "severity": "HIGH",
+          "decision": "CREATE_INCIDENT",
+          "action": "REQUEST_HUMAN_APPROVAL",
+          "requires_human_approval": true
+        },
+        "matches_documented_policy": true
+      },
+      {
+        "scenario": "person_down",
+        "state": "confirmed",
+        "confidence": 1.0,
+        "duration_seconds": 10.0,
+        "actual": {
+          "severity": "HIGH",
+          "decision": "CREATE_INCIDENT",
+          "action": "REQUEST_HUMAN_APPROVAL",
+          "requires_human_approval": true
+        },
+        "expected": {
+          "severity": "HIGH",
+          "decision": "CREATE_INCIDENT",
+          "action": "REQUEST_HUMAN_APPROVAL",
+          "requires_human_approval": true
+        },
+        "matches_documented_policy": true
+      },
+      {
+        "scenario": "route_obstruction",
+        "state": "none",
+        "confidence": 0.0,
+        "duration_seconds": 0.0,
+        "actual": {
+          "severity": "NONE",
+          "decision": "CONTINUE_OBSERVATION",
+          "action": "NONE",
+          "requires_human_approval": false
+        },
+        "expected": {
+          "severity": "NONE",
+          "decision": "CONTINUE_OBSERVATION",
+          "action": "NONE",
+          "requires_human_approval": false
+        },
+        "matches_documented_policy": true
+      },
+      {
+        "scenario": "route_obstruction",
+        "state": "none",
+        "confidence": 0.2,
+        "duration_seconds": 0.0,
+        "actual": {
+          "severity": "NONE",
+          "decision": "CONTINUE_OBSERVATION",
+          "action": "NONE",
+          "requires_human_approval": false
+        },
+        "expected": {
+          "severity": "NONE",
+          "decision": "CONTINUE_OBSERVATION",
+          "action": "NONE",
+          "requires_human_approval": false
+        },
+        "matches_documented_policy": true
+      },
+      {
+        "scenario": "route_obstruction",
+        "state": "none",
+        "confidence": 0.34,
+        "duration_seconds": 0.0,
+        "actual": {
+          "severity": "NONE",
+          "decision": "CONTINUE_OBSERVATION",
+          "action": "NONE",
+          "requires_human_approval": false
+        },
+        "expected": {
+          "severity": "NONE",
+          "decision": "CONTINUE_OBSERVATION",
+          "action": "NONE",
+          "requires_human_approval": false
+        },
+        "matches_documented_policy": true
+      },
+      {
+        "scenario": "route_obstruction",
+        "state": "none",
+        "confidence": 0.35,
+        "duration_seconds": 0.0,
+        "actual": {
+          "severity": "NONE",
+          "decision": "CONTINUE_OBSERVATION",
+          "action": "NONE",
+          "requires_human_approval": false
+        },
+        "expected": {
+          "severity": "NONE",
+          "decision": "CONTINUE_OBSERVATION",
+          "action": "NONE",
+          "requires_human_approval": false
+        },
+        "matches_documented_policy": true
+      },
+      {
+        "scenario": "route_obstruction",
+        "state": "none",
+        "confidence": 0.5,
+        "duration_seconds": 0.0,
+        "actual": {
+          "severity": "NONE",
+          "decision": "CONTINUE_OBSERVATION",
+          "action": "NONE",
+          "requires_human_approval": false
+        },
+        "expected": {
+          "severity": "NONE",
+          "decision": "CONTINUE_OBSERVATION",
+          "action": "NONE",
+          "requires_human_approval": false
+        },
+        "matches_documented_policy": true
+      },
+      {
+        "scenario": "route_obstruction",
+        "state": "none",
+        "confidence": 0.6,
+        "duration_seconds": 0.0,
+        "actual": {
+          "severity": "NONE",
+          "decision": "CONTINUE_OBSERVATION",
+          "action": "NONE",
+          "requires_human_approval": false
+        },
+        "expected": {
+          "severity": "NONE",
+          "decision": "CONTINUE_OBSERVATION",
+          "action": "NONE",
+          "requires_human_approval": false
+        },
+        "matches_documented_policy": true
+      },
+      {
+        "scenario": "route_obstruction",
+        "state": "none",
+        "confidence": 0.7,
+        "duration_seconds": 0.0,
+        "actual": {
+          "severity": "NONE",
+          "decision": "CONTINUE_OBSERVATION",
+          "action": "NONE",
+          "requires_human_approval": false
+        },
+        "expected": {
+          "severity": "NONE",
+          "decision": "CONTINUE_OBSERVATION",
+          "action": "NONE",
+          "requires_human_approval": false
+        },
+        "matches_documented_policy": true
+      },
+      {
+        "scenario": "route_obstruction",
+        "state": "none",
+        "confidence": 0.84,
+        "duration_seconds": 0.0,
+        "actual": {
+          "severity": "NONE",
+          "decision": "CONTINUE_OBSERVATION",
+          "action": "NONE",
+          "requires_human_approval": false
+        },
+        "expected": {
+          "severity": "NONE",
+          "decision": "CONTINUE_OBSERVATION",
+          "action": "NONE",
+          "requires_human_approval": false
+        },
+        "matches_documented_policy": true
+      },
+      {
+        "scenario": "route_obstruction",
+        "state": "none",
+        "confidence": 0.85,
+        "duration_seconds": 0.0,
+        "actual": {
+          "severity": "NONE",
+          "decision": "CONTINUE_OBSERVATION",
+          "action": "NONE",
+          "requires_human_approval": false
+        },
+        "expected": {
+          "severity": "NONE",
+          "decision": "CONTINUE_OBSERVATION",
+          "action": "NONE",
+          "requires_human_approval": false
+        },
+        "matches_documented_policy": true
+      },
+      {
+        "scenario": "route_obstruction",
+        "state": "none",
+        "confidence": 0.86,
+        "duration_seconds": 0.0,
+        "actual": {
+          "severity": "NONE",
+          "decision": "CONTINUE_OBSERVATION",
+          "action": "NONE",
+          "requires_human_approval": false
+        },
+        "expected": {
+          "severity": "NONE",
+          "decision": "CONTINUE_OBSERVATION",
+          "action": "NONE",
+          "requires_human_approval": false
+        },
+        "matches_documented_policy": true
+      },
+      {
+        "scenario": "route_obstruction",
+        "state": "none",
+        "confidence": 0.95,
+        "duration_seconds": 0.0,
+        "actual": {
+          "severity": "NONE",
+          "decision": "CONTINUE_OBSERVATION",
+          "action": "NONE",
+          "requires_human_approval": false
+        },
+        "expected": {
+          "severity": "NONE",
+          "decision": "CONTINUE_OBSERVATION",
+          "action": "NONE",
+          "requires_human_approval": false
+        },
+        "matches_documented_policy": true
+      },
+      {
+        "scenario": "route_obstruction",
+        "state": "none",
+        "confidence": 1.0,
+        "duration_seconds": 0.0,
+        "actual": {
+          "severity": "NONE",
+          "decision": "CONTINUE_OBSERVATION",
+          "action": "NONE",
+          "requires_human_approval": false
+        },
+        "expected": {
+          "severity": "NONE",
+          "decision": "CONTINUE_OBSERVATION",
+          "action": "NONE",
+          "requires_human_approval": false
+        },
+        "matches_documented_policy": true
+      },
+      {
+        "scenario": "route_obstruction",
+        "state": "possible",
+        "confidence": 0.0,
+        "duration_seconds": 4.0,
+        "actual": {
+          "severity": "NONE",
+          "decision": "CONTINUE_OBSERVATION",
+          "action": "NONE",
+          "requires_human_approval": false
+        },
+        "expected": {
+          "severity": "NONE",
+          "decision": "CONTINUE_OBSERVATION",
+          "action": "NONE",
+          "requires_human_approval": false
+        },
+        "matches_documented_policy": true
+      },
+      {
+        "scenario": "route_obstruction",
+        "state": "possible",
+        "confidence": 0.2,
+        "duration_seconds": 4.0,
+        "actual": {
+          "severity": "NONE",
+          "decision": "CONTINUE_OBSERVATION",
+          "action": "NONE",
+          "requires_human_approval": false
+        },
+        "expected": {
+          "severity": "NONE",
+          "decision": "CONTINUE_OBSERVATION",
+          "action": "NONE",
+          "requires_human_approval": false
+        },
+        "matches_documented_policy": true
+      },
+      {
+        "scenario": "route_obstruction",
+        "state": "possible",
+        "confidence": 0.34,
+        "duration_seconds": 4.0,
+        "actual": {
+          "severity": "NONE",
+          "decision": "CONTINUE_OBSERVATION",
+          "action": "NONE",
+          "requires_human_approval": false
+        },
+        "expected": {
+          "severity": "NONE",
+          "decision": "CONTINUE_OBSERVATION",
+          "action": "NONE",
+          "requires_human_approval": false
+        },
+        "matches_documented_policy": true
+      },
+      {
+        "scenario": "route_obstruction",
+        "state": "possible",
+        "confidence": 0.35,
+        "duration_seconds": 4.0,
+        "actual": {
+          "severity": "LOW",
+          "decision": "INCREASE_MONITORING",
+          "action": "STORE_EVIDENCE_ONLY",
+          "requires_human_approval": false
+        },
+        "expected": {
+          "severity": "LOW",
+          "decision": "INCREASE_MONITORING",
+          "action": "STORE_EVIDENCE_ONLY",
+          "requires_human_approval": false
+        },
+        "matches_documented_policy": true
+      },
+      {
+        "scenario": "route_obstruction",
+        "state": "possible",
+        "confidence": 0.5,
+        "duration_seconds": 4.0,
+        "actual": {
+          "severity": "LOW",
+          "decision": "INCREASE_MONITORING",
+          "action": "STORE_EVIDENCE_ONLY",
+          "requires_human_approval": false
+        },
+        "expected": {
+          "severity": "LOW",
+          "decision": "INCREASE_MONITORING",
+          "action": "STORE_EVIDENCE_ONLY",
+          "requires_human_approval": false
+        },
+        "matches_documented_policy": true
+      },
+      {
+        "scenario": "route_obstruction",
+        "state": "possible",
+        "confidence": 0.6,
+        "duration_seconds": 4.0,
+        "actual": {
+          "severity": "MEDIUM",
+          "decision": "INCREASE_MONITORING",
+          "action": "STORE_EVIDENCE_ONLY",
+          "requires_human_approval": false
+        },
+        "expected": {
+          "severity": "MEDIUM",
+          "decision": "INCREASE_MONITORING",
+          "action": "STORE_EVIDENCE_ONLY",
+          "requires_human_approval": false
+        },
+        "matches_documented_policy": true
+      },
+      {
+        "scenario": "route_obstruction",
+        "state": "possible",
+        "confidence": 0.7,
+        "duration_seconds": 4.0,
+        "actual": {
+          "severity": "MEDIUM",
+          "decision": "INCREASE_MONITORING",
+          "action": "STORE_EVIDENCE_ONLY",
+          "requires_human_approval": false
+        },
+        "expected": {
+          "severity": "MEDIUM",
+          "decision": "INCREASE_MONITORING",
+          "action": "STORE_EVIDENCE_ONLY",
+          "requires_human_approval": false
+        },
+        "matches_documented_policy": true
+      },
+      {
+        "scenario": "route_obstruction",
+        "state": "possible",
+        "confidence": 0.84,
+        "duration_seconds": 4.0,
+        "actual": {
+          "severity": "MEDIUM",
+          "decision": "INCREASE_MONITORING",
+          "action": "STORE_EVIDENCE_ONLY",
+          "requires_human_approval": false
+        },
+        "expected": {
+          "severity": "MEDIUM",
+          "decision": "INCREASE_MONITORING",
+          "action": "STORE_EVIDENCE_ONLY",
+          "requires_human_approval": false
+        },
+        "matches_documented_policy": true
+      },
+      {
+        "scenario": "route_obstruction",
+        "state": "possible",
+        "confidence": 0.85,
+        "duration_seconds": 4.0,
+        "actual": {
+          "severity": "MEDIUM",
+          "decision": "INCREASE_MONITORING",
+          "action": "STORE_EVIDENCE_ONLY",
+          "requires_human_approval": false
+        },
+        "expected": {
+          "severity": "MEDIUM",
+          "decision": "INCREASE_MONITORING",
+          "action": "STORE_EVIDENCE_ONLY",
+          "requires_human_approval": false
+        },
+        "matches_documented_policy": true
+      },
+      {
+        "scenario": "route_obstruction",
+        "state": "possible",
+        "confidence": 0.86,
+        "duration_seconds": 4.0,
+        "actual": {
+          "severity": "MEDIUM",
+          "decision": "INCREASE_MONITORING",
+          "action": "STORE_EVIDENCE_ONLY",
+          "requires_human_approval": false
+        },
+        "expected": {
+          "severity": "MEDIUM",
+          "decision": "INCREASE_MONITORING",
+          "action": "STORE_EVIDENCE_ONLY",
+          "requires_human_approval": false
+        },
+        "matches_documented_policy": true
+      },
+      {
+        "scenario": "route_obstruction",
+        "state": "possible",
+        "confidence": 0.95,
+        "duration_seconds": 4.0,
+        "actual": {
+          "severity": "MEDIUM",
+          "decision": "INCREASE_MONITORING",
+          "action": "STORE_EVIDENCE_ONLY",
+          "requires_human_approval": false
+        },
+        "expected": {
+          "severity": "MEDIUM",
+          "decision": "INCREASE_MONITORING",
+          "action": "STORE_EVIDENCE_ONLY",
+          "requires_human_approval": false
+        },
+        "matches_documented_policy": true
+      },
+      {
+        "scenario": "route_obstruction",
+        "state": "possible",
+        "confidence": 1.0,
+        "duration_seconds": 4.0,
+        "actual": {
+          "severity": "MEDIUM",
+          "decision": "INCREASE_MONITORING",
+          "action": "STORE_EVIDENCE_ONLY",
+          "requires_human_approval": false
+        },
+        "expected": {
+          "severity": "MEDIUM",
+          "decision": "INCREASE_MONITORING",
+          "action": "STORE_EVIDENCE_ONLY",
+          "requires_human_approval": false
+        },
+        "matches_documented_policy": true
+      },
+      {
+        "scenario": "route_obstruction",
+        "state": "confirmed",
+        "confidence": 0.0,
+        "duration_seconds": 10.0,
+        "actual": {
+          "severity": "NONE",
+          "decision": "CONTINUE_OBSERVATION",
+          "action": "NONE",
+          "requires_human_approval": false
+        },
+        "expected": {
+          "severity": "NONE",
+          "decision": "CONTINUE_OBSERVATION",
+          "action": "NONE",
+          "requires_human_approval": false
+        },
+        "matches_documented_policy": true
+      },
+      {
+        "scenario": "route_obstruction",
+        "state": "confirmed",
+        "confidence": 0.2,
+        "duration_seconds": 10.0,
+        "actual": {
+          "severity": "NONE",
+          "decision": "CONTINUE_OBSERVATION",
+          "action": "NONE",
+          "requires_human_approval": false
+        },
+        "expected": {
+          "severity": "NONE",
+          "decision": "CONTINUE_OBSERVATION",
+          "action": "NONE",
+          "requires_human_approval": false
+        },
+        "matches_documented_policy": true
+      },
+      {
+        "scenario": "route_obstruction",
+        "state": "confirmed",
+        "confidence": 0.34,
+        "duration_seconds": 10.0,
+        "actual": {
+          "severity": "NONE",
+          "decision": "CONTINUE_OBSERVATION",
+          "action": "NONE",
+          "requires_human_approval": false
+        },
+        "expected": {
+          "severity": "NONE",
+          "decision": "CONTINUE_OBSERVATION",
+          "action": "NONE",
+          "requires_human_approval": false
+        },
+        "matches_documented_policy": true
+      },
+      {
+        "scenario": "route_obstruction",
+        "state": "confirmed",
+        "confidence": 0.35,
+        "duration_seconds": 10.0,
+        "actual": {
+          "severity": "MEDIUM",
+          "decision": "CREATE_INCIDENT",
+          "action": "REQUEST_HUMAN_APPROVAL",
+          "requires_human_approval": true
+        },
+        "expected": {
+          "severity": "MEDIUM",
+          "decision": "CREATE_INCIDENT",
+          "action": "REQUEST_HUMAN_APPROVAL",
+          "requires_human_approval": true
+        },
+        "matches_documented_policy": true
+      },
+      {
+        "scenario": "route_obstruction",
+        "state": "confirmed",
+        "confidence": 0.5,
+        "duration_seconds": 10.0,
+        "actual": {
+          "severity": "MEDIUM",
+          "decision": "CREATE_INCIDENT",
+          "action": "REQUEST_HUMAN_APPROVAL",
+          "requires_human_approval": true
+        },
+        "expected": {
+          "severity": "MEDIUM",
+          "decision": "CREATE_INCIDENT",
+          "action": "REQUEST_HUMAN_APPROVAL",
+          "requires_human_approval": true
+        },
+        "matches_documented_policy": true
+      },
+      {
+        "scenario": "route_obstruction",
+        "state": "confirmed",
+        "confidence": 0.6,
+        "duration_seconds": 10.0,
+        "actual": {
+          "severity": "MEDIUM",
+          "decision": "CREATE_INCIDENT",
+          "action": "REQUEST_HUMAN_APPROVAL",
+          "requires_human_approval": true
+        },
+        "expected": {
+          "severity": "MEDIUM",
+          "decision": "CREATE_INCIDENT",
+          "action": "REQUEST_HUMAN_APPROVAL",
+          "requires_human_approval": true
+        },
+        "matches_documented_policy": true
+      },
+      {
+        "scenario": "route_obstruction",
+        "state": "confirmed",
+        "confidence": 0.7,
+        "duration_seconds": 10.0,
+        "actual": {
+          "severity": "MEDIUM",
+          "decision": "CREATE_INCIDENT",
+          "action": "REQUEST_HUMAN_APPROVAL",
+          "requires_human_approval": true
+        },
+        "expected": {
+          "severity": "MEDIUM",
+          "decision": "CREATE_INCIDENT",
+          "action": "REQUEST_HUMAN_APPROVAL",
+          "requires_human_approval": true
+        },
+        "matches_documented_policy": true
+      },
+      {
+        "scenario": "route_obstruction",
+        "state": "confirmed",
+        "confidence": 0.84,
+        "duration_seconds": 10.0,
+        "actual": {
+          "severity": "MEDIUM",
+          "decision": "CREATE_INCIDENT",
+          "action": "REQUEST_HUMAN_APPROVAL",
+          "requires_human_approval": true
+        },
+        "expected": {
+          "severity": "MEDIUM",
+          "decision": "CREATE_INCIDENT",
+          "action": "REQUEST_HUMAN_APPROVAL",
+          "requires_human_approval": true
+        },
+        "matches_documented_policy": true
+      },
+      {
+        "scenario": "route_obstruction",
+        "state": "confirmed",
+        "confidence": 0.85,
+        "duration_seconds": 10.0,
+        "actual": {
+          "severity": "HIGH",
+          "decision": "CREATE_INCIDENT",
+          "action": "SEND_ALERT",
+          "requires_human_approval": false
+        },
+        "expected": {
+          "severity": "HIGH",
+          "decision": "CREATE_INCIDENT",
+          "action": "SEND_ALERT",
+          "requires_human_approval": false
+        },
+        "matches_documented_policy": true
+      },
+      {
+        "scenario": "route_obstruction",
+        "state": "confirmed",
+        "confidence": 0.86,
+        "duration_seconds": 10.0,
+        "actual": {
+          "severity": "HIGH",
+          "decision": "CREATE_INCIDENT",
+          "action": "SEND_ALERT",
+          "requires_human_approval": false
+        },
+        "expected": {
+          "severity": "HIGH",
+          "decision": "CREATE_INCIDENT",
+          "action": "SEND_ALERT",
+          "requires_human_approval": false
+        },
+        "matches_documented_policy": true
+      },
+      {
+        "scenario": "route_obstruction",
+        "state": "confirmed",
+        "confidence": 0.95,
+        "duration_seconds": 10.0,
+        "actual": {
+          "severity": "HIGH",
+          "decision": "CREATE_INCIDENT",
+          "action": "SEND_ALERT",
+          "requires_human_approval": false
+        },
+        "expected": {
+          "severity": "HIGH",
+          "decision": "CREATE_INCIDENT",
+          "action": "SEND_ALERT",
+          "requires_human_approval": false
+        },
+        "matches_documented_policy": true
+      },
+      {
+        "scenario": "route_obstruction",
+        "state": "confirmed",
+        "confidence": 1.0,
+        "duration_seconds": 10.0,
+        "actual": {
+          "severity": "HIGH",
+          "decision": "CREATE_INCIDENT",
+          "action": "SEND_ALERT",
+          "requires_human_approval": false
+        },
+        "expected": {
+          "severity": "HIGH",
+          "decision": "CREATE_INCIDENT",
+          "action": "SEND_ALERT",
+          "requires_human_approval": false
+        },
+        "matches_documented_policy": true
+      }
+    ]
+  },
+  "cloud": {
+    "aws_processing_latency_ms": "NOT MEASURED",
+    "aws_throughput_events_per_sec": "NOT MEASURED",
+    "aws_cost_per_1000_events_usd": "NOT MEASURED",
+    "aws_resource_utilization": "NOT MEASURED",
+    "reason": "No live AWS deployment exists in this environment; local-mode only (storage_backend=local, no AWS credentials configured)."
+  },
+  "run_duration_seconds": 137.01
+}
